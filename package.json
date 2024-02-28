@@ -1,5 +1,5 @@
 {
-  "name": "@alexfigliolia/async-jobs",
+  "name": "@alexfigliolia/my-performance-async",
   "version": "1.0.0",
   "description": "Utilities for working with distributed asynchronous tasks in My Performance",
   "license": "ISC",
