@@ -21,7 +21,9 @@ type RepositoryPullJob {
 type RepositoryStatsPullJob {
   jobId: Int!
   id: Int!
+  date: String
   clone_url: String!
+  range: Schedule
   token: String!
   repositoryId: Int!
   organizationId: Int!
@@ -29,7 +31,10 @@ type RepositoryStatsPullJob {
 type Mutation {
   setJobStatus(id: Int!, status: JobStatus!): Boolean!
   registerRepositoryPull(token: String!, api_url: String!, platform: Platform!, requestMethod: RequestMethod!, organizationId: Int!): Int!
-  registerRepositoryStatsPull(token: String!, clone_url: String!, repositoryId: Int!, organizationId: Int!): Int!
+  registerRepositoryStatsPull(date: String, token: String!, clone_url: String!, repositoryId: Int!, organizationId: Int!): Int!
+  setRepositoryStatsJobStatus(id: Int!, status: JobStatus!): Boolean!
+  subscribeToRepositoryStats(date: String, token: String!, clone_url: String!, repositoryId: Int!, organizationId: Int!): Int!
+  deleteRepositoryStatsJobs(repositoryId: Int!): Boolean!
 }
 type Subscription {
   repositoryPulls: RepositoryPullJob!
@@ -42,6 +47,13 @@ enum Platform {
 enum RequestMethod {
   GET
   POST
+}
+enum Schedule {
+  once
+  daily
+  weekly
+  monthly
+  yearly
 }
 enum JobStatus {
   complete
