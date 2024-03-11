@@ -5,6 +5,7 @@ export abstract class BaseSubscription<P extends IOptions, T extends Pull<P>>
   implements IBaseSubscription<P, T>
 {
   public closed = false;
+  private interval: ReturnType<typeof setInterval> | null = null;
 
   abstract initialize(): BaseSubscription<P, T>;
 
@@ -16,11 +17,10 @@ export abstract class BaseSubscription<P extends IOptions, T extends Pull<P>>
     this.closed = true;
   }
 
-  public onPoll(job?: P | null) {
-    if (job) {
-      const pull = this.createPull(job);
-      void this.enqueue(pull);
-    }
+  public onPoll(job: P) {
+    this.deactivatePollInterval();
+    const pull = this.createPull(job);
+    void this.enqueue(pull);
   }
 
   public async enqueue(pull: T) {
@@ -28,6 +28,20 @@ export abstract class BaseSubscription<P extends IOptions, T extends Pull<P>>
     await puller.onComplete();
     if (!this.closed) {
       return this.poll();
+    }
+  }
+
+  public activatePollInterval() {
+    this.deactivatePollInterval();
+    this.interval = setInterval(() => {
+      void this.poll();
+    }, 2000);
+  }
+
+  public deactivatePollInterval() {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
     }
   }
 }

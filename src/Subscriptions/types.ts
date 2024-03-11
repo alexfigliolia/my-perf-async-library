@@ -7,7 +7,7 @@ export interface IBaseSubscription<P extends IOptions, T extends Pull<P>> {
   poll: () => Promise<void>;
   createPull: (job: P) => T;
   destroy: () => void;
-  onPoll: (job?: P | null) => void;
+  onPoll: (job: P) => void;
   enqueue: (pull: T) => Promise<void>;
 }
 
